@@ -12,7 +12,7 @@ class NotificationController {
         .status(401)
         .json({ error: 'Only providers can load notification' });
     }
-    console.log('provider id: ', request.userId);
+
     const notifications = await Notification.find({
       user: request.userId,
     })
@@ -23,7 +23,15 @@ class NotificationController {
   }
 
   async update(request, response) {
-    return response.json({});
+    const notification = await Notification.findByIdAndUpdate(
+      request.id,
+      {
+        read: true,
+      },
+      { new: true }
+    );
+
+    return response.json(notification);
   }
 }
 
