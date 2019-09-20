@@ -7,7 +7,7 @@ The second version is about separating code responsibilities in each environment
 
 You will need NodeJS@10.16 or higher to run this project.
 
-I recommend to use (Yarn)[https://yarnpkg.com/lang/en/] as packge manager
+I recommend to use [Yarn](https://yarnpkg.com/lang/en/) as packge manager
 
 ### Backend
 
