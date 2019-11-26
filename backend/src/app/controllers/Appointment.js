@@ -5,9 +5,19 @@ import Appointment from '../models/Appointment';
 import CreateAppointmentService from '../services/CreateAppointmentService';
 import CancelAppointmentService from '../services/CancelAppointmentService';
 
+import Cache from '../../lib/Cache';
+
 class AppointmentController {
   async index(request, response) {
     const { page = 1 } = request.query;
+
+    const cacheKey = `user:${request.userId}:appointments:${page}`;
+
+    const cached = await Cache.get(cacheKey);
+
+    if (cached) {
+      return response.json(cached);
+    }
 
     const appointments = await Appointment.findAll({
       where: { user_id: request.userId, canceled_at: null },
