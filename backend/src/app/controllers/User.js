@@ -1,25 +1,8 @@
-import * as Yup from 'yup';
 import User from '../models/User';
 import File from '../models/File';
 
 class UserController {
   async store(request, response) {
-    const schema = Yup.object().shape({
-      name: Yup.string().required(),
-      email: Yup.string()
-        .email()
-        .required(),
-      password: Yup.string()
-        .required()
-        .min(6),
-    });
-
-    const validRequestBody = await schema.isValid(request.body);
-
-    if (!validRequestBody) {
-      return response.status(400).json({ error: 'Data validation fail.' });
-    }
-
     const userExists = await User.findOne({
       where: { email: request.body.email },
     });
@@ -39,26 +22,6 @@ class UserController {
   }
 
   async update(request, response) {
-    const schema = Yup.object().shape({
-      name: Yup.string(),
-      email: Yup.string().email(),
-      oldPassword: Yup.string().min(6),
-      password: Yup.string()
-        .min(6)
-        .when('oldPassword', (oldPassword, field) =>
-          oldPassword ? field.required() : field
-        ),
-      confirmPassword: Yup.string().when('password', (password, field) =>
-        password ? field.required().oneOf([Yup.ref('password')]) : field
-      ),
-    });
-
-    const validRequestBody = await schema.isValid(request.body);
-
-    if (!validRequestBody) {
-      return response.status(400).json({ error: 'Data validation fail.' });
-    }
-
     const { email, oldPassword } = request.body;
 
     const user = await User.findByPk(request.userId);
